@@ -1,3 +1,6 @@
+// Load environment variables from .env file (for local development)
+require('dotenv').config();
+
 const swaggerAutogen = require('swagger-autogen')();
 
 // Swagger configuration object
@@ -15,9 +18,10 @@ const swaggerConfig = {
       url: 'https://opensource.org/licenses/ISC'
     }
   },
-  host: 'localhost:3000',
+  // Dynamic host configuration - will be set by the application at runtime
+  host: process.env.RAILWAY_PUBLIC_DOMAIN || 'localhost:3000',
   basePath: '/',
-  schemes: ['http'],
+  schemes: process.env.NODE_ENV === 'production' ? ['https'] : ['http'],
   consumes: ['application/json'],
   produces: ['application/json']
 };

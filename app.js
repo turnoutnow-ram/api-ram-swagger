@@ -1,3 +1,6 @@
+// Load environment variables from .env file (for local development)
+require('dotenv').config();
+
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const routes = require('./routes');
@@ -18,6 +21,16 @@ app.use(express.urlencoded({ extended: true }));
 let swaggerDocument;
 try {
   swaggerDocument = require('./swagger-output.json');
+  
+  // Update Swagger configuration for production deployment
+  if (process.env.NODE_ENV === 'production') {
+    // Update host for Railway deployment
+    if (process.env.RAILWAY_PUBLIC_DOMAIN) {
+      swaggerDocument.host = process.env.RAILWAY_PUBLIC_DOMAIN;
+    }
+    // Use HTTPS scheme for production
+    swaggerDocument.schemes = ['https'];
+  }
 } catch (error) {
   console.log('Swagger documentation not found. Run "npm run swagger" to generate it.');
 }
@@ -80,9 +93,12 @@ app.use('*', (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
+  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+  const host = process.env.RAILWAY_PUBLIC_DOMAIN || `localhost:${PORT}`;
+  
   console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📖 API Documentation available at: http://localhost:${PORT}/api-docs`);
-  console.log(`🔗 API Base URL: http://localhost:${PORT}/api`);
+  console.log(`📖 API Documentation available at: ${protocol}://${host}/api-docs`);
+  console.log(`🔗 API Base URL: ${protocol}://${host}/api`);
 });
 
 // Export app for testing purposes

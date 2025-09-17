@@ -10,9 +10,9 @@ WORKDIR /usr/src/app
 # This is done before copying the entire codebase to leverage Docker layer caching
 COPY package*.json ./
 
-# Install dependencies
+# Install all dependencies first (including dev dependencies for swagger generation)
 # Using npm ci for faster, reliable, reproducible builds
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci && npm cache clean --force
 
 # Create a non-root user to run the application (security best practice)
 RUN addgroup -g 1001 -S nodejs && \
@@ -23,6 +23,9 @@ COPY . .
 
 # Generate Swagger documentation
 RUN npm run swagger
+
+# Remove dev dependencies to reduce image size (keep only production dependencies)
+RUN npm ci --only=production && npm cache clean --force
 
 # Change ownership of the app directory to the nodejs user
 RUN chown -R nodejs:nodejs /usr/src/app
