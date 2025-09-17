@@ -1,0 +1,22 @@
+{
+  "name": "my-rest-api",
+  "version": "1.0.0",
+  "description": "REST API with Swagger documentation",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "swagger": "node swagger.js"
+  },
+  "keywords": ["nodejs", "express", "rest-api", "swagger"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "swagger-ui-express": "^5.0.0",
+    "swagger-autogen": "^2.23.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
