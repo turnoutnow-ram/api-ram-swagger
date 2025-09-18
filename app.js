@@ -4,8 +4,6 @@ require('dotenv').config();
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const routes = require('./routes');
-const usersApi = require('./Users-api');
-const ordersApi = require('./Order-api');
 
 // Create Express application instance
 const app = express();
@@ -49,10 +47,7 @@ app.get('/api/users', (req, res, next) => {
 */
 // Use routes from routes.js - this will handle the actual implementation
 app.use('/api', routes);
-
-// Use new API routes with RabbitMQ integration
-app.use('/api/users', usersApi);
-app.use('/api/orders', ordersApi);
+ 
 
 // Root endpoint for API health check
 app.get('/', (req, res) => {
@@ -65,10 +60,7 @@ app.get('/', (req, res) => {
       version: '1.0.0',
       endpoints: {
         users: '/api/users',
-        userCreate: '/api/users/create',
-        orders: '/api/orders',
-        orderCreate: '/api/orders/create',
-        processedUsers: '/api/orders/processed-users',
+        userCreate: '/api/users/create', 
         attendees: '/api/attendees',
         sessions: '/api/sessions',
         documentation: '/api-docs'

@@ -5,6 +5,10 @@ FROM node:20-alpine
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
+# Environment variables for RabbitMQ (can be overridden at runtime)
+ENV NODE_ENV=production
+ENV RABBITMQ_URL=amqp://localhost:5672
+
 
 # Copy package.json and package-lock.json (if available)
 # This is done before copying the entire codebase to leverage Docker layer caching
@@ -35,6 +39,15 @@ USER nodejs
 
 # Expose the port that the app runs on
 EXPOSE 3000 
- 
+
+# Add healthcheck to monitor application status
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD node -e "const http = require('http'); \
+    const options = { hostname: 'localhost', port: process.env.PORT || 3000, path: '/', timeout: 5000 }; \
+    const req = http.request(options, (res) => { process.exit(res.statusCode === 200 ? 0 : 1); }); \
+    req.on('error', () => process.exit(1)); \
+    req.on('timeout', () => process.exit(1)); \
+    req.end();"
+
 # Define the command to run the application
 CMD ["npm", "start"]
