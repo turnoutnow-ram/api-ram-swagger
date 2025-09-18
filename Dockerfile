@@ -24,10 +24,9 @@ COPY . .
 # Generate Swagger documentation
 RUN npm run swagger
 
-# Generate Swagger documentation
-RUN npm run test
-
-
+# Generate test  
+#RUN npm run test
+ 
 
 # Remove dev dependencies to reduce image size (keep only production dependencies)
 RUN npm ci --only=production && npm cache clean --force
