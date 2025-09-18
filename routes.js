@@ -106,5 +106,34 @@ router.get('/attendees', (req, res) => {
 });
  
 
+/**
+ * GET /users - Retrieve all users
+ * Returns a list of all users with optional filtering
+ */
+router.get('/sessions', (req, res) => {
+  try {
+    let filteredUsers = [...sampleUsers];  
+
+    // Return successful response with users data
+    res.status(200).json({
+      success: true,
+      message: 'sessions retrieved successfully',
+      count: filteredUsers.length,
+      data: filteredUsers,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    // Handle any errors that occur during processing
+    console.error('Error retrieving users:', error.message);
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // Export the router to be used in app.js
 module.exports = router;

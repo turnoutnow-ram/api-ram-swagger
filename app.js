@@ -4,6 +4,8 @@ require('dotenv').config();
 const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const routes = require('./routes');
+const usersApi = require('./Users-api');
+const ordersApi = require('./Order-api');
 
 // Create Express application instance
 const app = express();
@@ -48,6 +50,10 @@ app.get('/api/users', (req, res, next) => {
 // Use routes from routes.js - this will handle the actual implementation
 app.use('/api', routes);
 
+// Use new API routes with RabbitMQ integration
+app.use('/api/users', usersApi);
+app.use('/api/orders', ordersApi);
+
 // Root endpoint for API health check
 app.get('/', (req, res) => {
   // #swagger.tags = ['Health Check']
@@ -59,8 +65,17 @@ app.get('/', (req, res) => {
       version: '1.0.0',
       endpoints: {
         users: '/api/users',
+        userCreate: '/api/users/create',
+        orders: '/api/orders',
+        orderCreate: '/api/orders/create',
+        processedUsers: '/api/orders/processed-users',
         attendees: '/api/attendees',
+        sessions: '/api/sessions',
         documentation: '/api-docs'
+      },
+      rabbitMQ: {
+        status: 'enabled',
+        queues: ['user_events', 'order_events']
       },
       timestamp: new Date().toISOString()
     });
@@ -87,7 +102,7 @@ app.use('*', (req, res) => {
   res.status(404).json({
     error: 'Route not found',
     message: `The requested route ${req.originalUrl} does not exist`,
-    availableRoutes: ['/api/users', '/api/attendees', '/api-docs'],
+    availableRoutes: ['/api/users', '/api/users/create', '/api/orders', '/api/orders/create', '/api/orders/processed-users', '/api/attendees', '/api/sessions', '/api-docs'],
     timestamp: new Date().toISOString()
   });
 });
