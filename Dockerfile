@@ -5,10 +5,6 @@ FROM node:20-alpine
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Environment variables for RabbitMQ (can be overridden at runtime)
-ENV NODE_ENV=production
-ENV RABBITMQ_URL=amqp://localhost:5672
-
 
 # Copy package.json and package-lock.json (if available)
 # This is done before copying the entire codebase to leverage Docker layer caching
@@ -27,6 +23,9 @@ COPY . .
 
 # Generate Swagger documentation
 RUN npm run swagger
+
+# Generate Swagger documentation
+RUN npm run test
 
 # Remove dev dependencies to reduce image size (keep only production dependencies)
 RUN npm ci --only=production && npm cache clean --force
