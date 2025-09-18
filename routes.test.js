@@ -4,6 +4,9 @@
  */
 
 const request = require('supertest');
+
+// Import app without starting the server
+// We'll use supertest to handle the server lifecycle
 const app = require('./app');
 
 // Test suite for Users API

@@ -99,15 +99,17 @@ app.use('*', (req, res) => {
   });
 });
 
-// Start the server
-app.listen(PORT, () => {
-  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-  const host = process.env.RAILWAY_PUBLIC_DOMAIN || `localhost:${PORT}`;
-  
-  console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📖 API Documentation available at: ${protocol}://${host}/api-docs`);
-  console.log(`🔗 API Base URL: ${protocol}://${host}/api`);
-});
+// Only start the server if this file is run directly (not imported for testing)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+    const host = process.env.RAILWAY_PUBLIC_DOMAIN || `localhost:${PORT}`;
+    
+    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`📖 API Documentation available at: ${protocol}://${host}/api-docs`);
+    console.log(`🔗 API Base URL: ${protocol}://${host}/api`);
+  });
+}
 
 // Export app for testing purposes
 module.exports = app;

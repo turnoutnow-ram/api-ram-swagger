@@ -25,7 +25,7 @@ COPY . .
 RUN npm run swagger
 
 # Generate test  
-#RUN npm run test
+RUN npm run test
  
 
 # Remove dev dependencies to reduce image size (keep only production dependencies)
