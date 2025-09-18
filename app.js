@@ -59,6 +59,7 @@ app.get('/', (req, res) => {
       version: '1.0.0',
       endpoints: {
         users: '/api/users',
+        attendees: '/api/attendees',
         documentation: '/api-docs'
       },
       timestamp: new Date().toISOString()
@@ -86,7 +87,7 @@ app.use('*', (req, res) => {
   res.status(404).json({
     error: 'Route not found',
     message: `The requested route ${req.originalUrl} does not exist`,
-    availableRoutes: ['/api/users', '/api-docs'],
+    availableRoutes: ['/api/users', '/api/attendees', '/api-docs'],
     timestamp: new Date().toISOString()
   });
 });
